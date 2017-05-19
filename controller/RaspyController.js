@@ -44,11 +44,12 @@ class Controller extends EventEmitter{
   }
 
 }
-module.exports.Controller={Controller}
-var testController = new Controller()
+module.exports.Controller=Controller
+/*var testController = new Controller()
 testController.simulateEvent(true);
 testController.simulateEvent(true);
 testController.simulateEvent(true);
 testController.simulateEvent(false);
 testController.simulateEvent(false);
 testController.simulateEvent(true);
+*/
