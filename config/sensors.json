@@ -1,0 +1,16 @@
+{
+  "sensors": [
+    {
+      "id": 1,
+      "type": "pir",
+      "location": "salotto",
+      "gpio": 21
+    },
+    {
+      "id": 2,
+      "type": "pir",
+      "location": "cucina",
+      "gpio": 22
+    }
+  ]
+}
