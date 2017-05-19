@@ -22,9 +22,11 @@ class Controller extends EventEmitter{
     }
   }
 
+  //funzione che rilancia l'evento del sensore in caso di salita del segnale
   callbackOnRiseUp(sensorInfo){
     console.log("Ricevuto evento da sensore su gpio"+sensorInfo.gpio+" posizionato in "+sensorInfo.location+" stato up")
   }
+  //funzione che rilancia l'evento del sensore in caso di discesa del segnale
   callbackOnFallingDown(sensorInfo){
     console.log("Ricevuto evento da sensore su gpio"+sensorInfo.gpio+" posizionato in "+sensorInfo.location+" stato down")
   }
