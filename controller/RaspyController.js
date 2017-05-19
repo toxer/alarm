@@ -2,7 +2,7 @@
 //del sistema di allarme attraverso la notifica degli eventi dei vari sensori
 //smista il risultato dell'elaborazione alle altre parti del sistema
 const EventEmitter = require('events');
-const Sensor = require("../raspberry/gpio/SensoreTest")
+const Sensor = require("../raspberry/gpio/Sensore")
 class Controller extends EventEmitter{
   constructor(){
     super()
@@ -22,11 +22,11 @@ class Controller extends EventEmitter{
     }
   }
 
-  //funzione che rilancia l'evento del sensore in caso di salita del segnale
+  //funzione che rilancia l'evento di un sensore in caso di salita del segnale
   callbackOnRiseUp(sensorInfo){
     console.log("Ricevuto evento da sensore su gpio"+sensorInfo.gpio+" posizionato in "+sensorInfo.location+" stato up")
   }
-  //funzione che rilancia l'evento del sensore in caso di discesa del segnale
+  //funzione che rilancia l'evento di un sensore in caso di discesa del segnale
   callbackOnFallingDown(sensorInfo){
     console.log("Ricevuto evento da sensore su gpio"+sensorInfo.gpio+" posizionato in "+sensorInfo.location+" stato down")
   }
@@ -45,8 +45,8 @@ class Controller extends EventEmitter{
 
 }
 module.exports.Controller=Controller
-/*var testController = new Controller()
-testController.simulateEvent(true);
+var testController = new Controller()
+/*testController.simulateEvent(true);
 testController.simulateEvent(true);
 testController.simulateEvent(true);
 testController.simulateEvent(false);

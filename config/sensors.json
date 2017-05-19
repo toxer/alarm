@@ -4,13 +4,13 @@
       "id": 1,
       "type": "pir",
       "location": "salotto",
-      "gpio": 21
+      "gpio": 7
     },
     {
       "id": 2,
       "type": "pir",
       "location": "cucina",
-      "gpio": 22
+      "gpio": 11
     }
   ]
 }
