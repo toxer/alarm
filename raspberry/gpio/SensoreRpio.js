@@ -7,9 +7,9 @@ const EventEmitter = require('events');
 const rpio = require('rpio');
 
 class Sensor extends EventEmitter {
-    constructor(sensorInfo, listeners,raspberryController) {
+    constructor(sensorInfo, listeners, raspberryController) {
         super();
-        this.raspberryController=raspberryController
+        this.raspberryController = raspberryController
         console.log("Inizializzazione sensore " + sensorInfo.type + " in " + sensorInfo.location)
         this.sensorInfo = sensorInfo
         this.gpio = sensorInfo.gpio
@@ -57,15 +57,15 @@ class Sensor extends EventEmitter {
         if (debug) {
             console.log("Emesso evento RiseUp da sensore " + this.gpio)
         }
-        this.emit("RiseUp", this.sensorInfo,this.raspberryController)
-                this.emit("RaspberrySensorUp", this.sensorInfo)
+        this.emit("RiseUp", this.sensorInfo, this.raspberryController)
+     
 
     }
     sensorFallingDown() {
         if (debug) {
             console.log("Emesso evento FallingDown da sensore " + this.gpio)
         }
-        this.emit("FallingDown", this.sensorInfo,this.raspberryController)
+        this.emit("FallingDown", this.sensorInfo, this.raspberryController)
     }
 
 }

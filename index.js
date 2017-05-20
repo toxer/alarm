@@ -24,12 +24,9 @@ function onFallingDown(sensorInfo){
 }
 
 function createJsonPackage(sensorInfo){
-    
+
 }
 
-var raspController = new raspberryController.Controller(onRiseUp,onFallingDown)
-
-var ee = new EventEmitter();
-var e2 = new EventEmitter();
+new raspberryController.Controller([onRiseUp],[onFallingDown])
 
 

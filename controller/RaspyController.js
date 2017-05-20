@@ -11,7 +11,7 @@ const Sensor = require("../raspberry/gpio/SensoreRpio")
 const sensorConfiguration = require("../config/sensors.json")
 
 class Controller extends EventEmitter {
-  constructor(riseUpFunction, fallingDownFunction) {
+  constructor(riseUpFunctions, fallingDownFunctions) {
     super()
 
     //configurazione json dei listeners
@@ -22,12 +22,15 @@ class Controller extends EventEmitter {
 
     //aggiungo le eventuali funzioni che trovo nel costruttore
     //sono quelle che venono invocate su chi ha instanziato il controller
-    if (riseUpFunction) {
-      listeners.push({ "event": "RiseUp", "function": riseUpFunction })
-
+    if (riseUpFunctions) {
+      for (var index in riseUpFunctions) {
+        listeners.push({ "event": "RiseUp", "function": riseUpFunctions[index] })
+      }
     }
-    if (fallingDownFunction) {
-      listeners.push({ "event": "FallingDown", "function": fallingDownFunction })
+    if (fallingDownFunctions) {
+      for (var index in fallingDownFunctions) {
+        listeners.push({ "event": "FallingDown", "function": fallingDownFunctions[index] })
+      }
     }
 
     this.sensorsConfig = sensorConfiguration.sensors
@@ -37,8 +40,7 @@ class Controller extends EventEmitter {
       var sensor = new Sensor(this.sensorsConfig[index], listeners, this)
       this.sensors.push(sensor)
     }
-    this.riseUpFunction = riseUpFunction;
-    this.fallingDownFunction = fallingDownFunction;
+    
 
   }
 

@@ -1,23 +1,23 @@
 //interfaccia con raspbery, rilancia al controller
 //gli eventi relativi ai sensori sul gpio
-
+const debug = require('../../config/configuration.json').debug.debugSensore
 const EventEmitter = require('events');
 const gpio = require('rpi-gpio');
 
 class Sensor extends EventEmitter {
 
-	constructor(sensorInfo, listeners, debug) {
+	constructor(sensorInfo, listeners, raspberryController) {
 		super();
-		this.debug = debug
 		console.log("Inizializzazione sensore " + sensorInfo.type + " in " + sensorInfo.location)
 		this.sensorInfo = sensorInfo
 		this.gpio = sensorInfo.gpio
 		this.listeners = listeners
+		this.raspberryController = raspberryController
 		//inserisco le funzioni di callBack
 		for (var index in this.listeners) {
 			var callbackFunction = listeners[index].function;
 			this.on(listeners[index].event, callbackFunction)
-			if (this.debug) {
+			if (debug) {
 				console.log("Aggiunta funzione di callback :  per sensore su gpio  " + sensorInfo.gpio)
 			}
 		}
@@ -73,18 +73,20 @@ class Sensor extends EventEmitter {
 	sensorRiseUp() {
 		// i parametri dopo il nome dell'evento sono quelli
 		//che vengono passati alla funzione di callback
-		if (this.debug) {
+		if (debug) {
 			console.log("Emesso evento RiseUp da sensore " + this.gpio)
 		}
-		this.emit("RiseUp", this.sensorInfo)
+		this.emit("RiseUp", this.sensorInfo, this.raspberryController)
+
 	}
 	sensorFallingDown() {
-		if (this.debug) {
+		if (debug) {
 			console.log("Emesso evento FallingDown da sensore " + this.gpio)
 		}
-		this.emit("FallingDown", this.sensorInfo)
+		this.emit("RiseUp", this.sensorInfo, this.raspberryController)
+
 	}
-	// do app specific cleaning before exiting
+
 
 }
 function error(err) {
