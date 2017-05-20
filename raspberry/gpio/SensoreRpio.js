@@ -2,13 +2,14 @@
 //gli eventi relativi ai sensori sul gpio
 //libreria migliore rispettoa  quella gpio di Sensore
 //reperibile in https://github.com/jperkin/node-rpio
-
+const debug = require('../../config/configuration.json').debug.debugSensore
 const EventEmitter = require('events');
 const rpio = require('rpio');
 
 class Sensor extends EventEmitter {
-    constructor(sensorInfo, listeners) {
+    constructor(sensorInfo, listeners,raspberryController) {
         super();
+        this.raspberryController=raspberryController
         console.log("Inizializzazione sensore " + sensorInfo.type + " in " + sensorInfo.location)
         this.sensorInfo = sensorInfo
         this.gpio = sensorInfo.gpio
@@ -17,7 +18,9 @@ class Sensor extends EventEmitter {
         for (var index in this.listeners) {
             var callbackFunction = listeners[index].function;
             this.on(listeners[index].event, callbackFunction)
-            console.log("Aggiunta funzione di callback :  per sensore su gpio  " + sensorInfo.gpio)
+            if (debug) {
+                console.log("Aggiunta funzione di callback :  per sensore su gpio  " + sensorInfo.gpio)
+            }
         }
         this.initSensor();
     }
@@ -27,7 +30,7 @@ class Sensor extends EventEmitter {
         //setup del sensore in lettura
         //con il rpi_pull_up lo stato senza indicazioni è 1
         rpio.open(this.gpio, rpio.INPUT, rpio.PULL_UP);
-        this.lastValue= rpio.read(this.gpio)
+        this.lastValue = rpio.read(this.gpio)
 
         //attivo la funzione di change
         rpio.poll(this.gpio, pollcb);
@@ -51,12 +54,18 @@ class Sensor extends EventEmitter {
     sensorRiseUp() {
         // i parametri dopo il nome dell'evento sono quelli
         //che vengono passati alla funzione di callback
-        console.log("Emesso evento RiseUp da sensore " + this.gpio)
-        this.emit("RiseUp", this.sensorInfo)
+        if (debug) {
+            console.log("Emesso evento RiseUp da sensore " + this.gpio)
+        }
+        this.emit("RiseUp", this.sensorInfo,this.raspberryController)
+                this.emit("RaspberrySensorUp", this.sensorInfo)
+
     }
     sensorFallingDown() {
-        console.log("Emesso evento FallingDown da sensore " + this.gpio)
-        this.emit("FallingDown", this.sensorInfo)
+        if (debug) {
+            console.log("Emesso evento FallingDown da sensore " + this.gpio)
+        }
+        this.emit("FallingDown", this.sensorInfo,this.raspberryController)
     }
 
 }

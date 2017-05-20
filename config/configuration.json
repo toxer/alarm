@@ -1,0 +1,7 @@
+{
+    "debug": {
+        "debug": true,
+        "debugControllerRaspberry": false,
+        "debugSensore": true
+    }
+}

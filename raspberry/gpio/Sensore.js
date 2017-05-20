@@ -6,8 +6,9 @@ const gpio = require('rpi-gpio');
 
 class Sensor extends EventEmitter {
 
-	constructor(sensorInfo, listeners) {
+	constructor(sensorInfo, listeners, debug) {
 		super();
+		this.debug = debug
 		console.log("Inizializzazione sensore " + sensorInfo.type + " in " + sensorInfo.location)
 		this.sensorInfo = sensorInfo
 		this.gpio = sensorInfo.gpio
@@ -16,7 +17,9 @@ class Sensor extends EventEmitter {
 		for (var index in this.listeners) {
 			var callbackFunction = listeners[index].function;
 			this.on(listeners[index].event, callbackFunction)
-			console.log("Aggiunta funzione di callback :  per sensore su gpio  " + sensorInfo.gpio)
+			if (this.debug) {
+				console.log("Aggiunta funzione di callback :  per sensore su gpio  " + sensorInfo.gpio)
+			}
 		}
 		this.initSensor();
 	}
@@ -25,7 +28,7 @@ class Sensor extends EventEmitter {
 	//inizializza il sensore
 	initSensor() {
 		//setup del sensore in lettura
-		
+
 		gpio.setup(this.gpio, gpio.DIR_IN, gpio.EDGE_BOTH, readInput);
 		console.log("Setup del sensore su gpio " + this.gpio)
 		//attivo l'event listener sul sensore che, dopo aver controllato
@@ -57,7 +60,7 @@ class Sensor extends EventEmitter {
 			gpio.destroy()
 		});
 
-	
+
 
 
 
@@ -70,11 +73,15 @@ class Sensor extends EventEmitter {
 	sensorRiseUp() {
 		// i parametri dopo il nome dell'evento sono quelli
 		//che vengono passati alla funzione di callback
-		console.log("Emesso evento RiseUp da sensore " + this.gpio)
+		if (this.debug) {
+			console.log("Emesso evento RiseUp da sensore " + this.gpio)
+		}
 		this.emit("RiseUp", this.sensorInfo)
 	}
 	sensorFallingDown() {
-		console.log("Emesso evento FallingDown da sensore " + this.gpio)
+		if (this.debug) {
+			console.log("Emesso evento FallingDown da sensore " + this.gpio)
+		}
 		this.emit("FallingDown", this.sensorInfo)
 	}
 	// do app specific cleaning before exiting
@@ -86,8 +93,8 @@ function error(err) {
 	}
 }
 function readInput() {
-    gpio.read(12, function(err, value) {
-        console.log('The value is ' + value);
-    });
+	gpio.read(12, function (err, value) {
+		console.log('The value is ' + value);
+	});
 }
 module.exports = Sensor
