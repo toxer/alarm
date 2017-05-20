@@ -3,14 +3,25 @@
     {
       "id": 1,
       "type": "pir",
-      "location": "salotto",
-      "gpio": 7
-    },
-    {
+      "location": "entrata",
+      "zone":"zona 1",
+      "gpio": 12
+      
+    },{
       "id": 2,
       "type": "pir",
+      "location": "salotto",
+      "zone":"zona 1",
+      "gpio": 16
+      
+    },{
+      "id": 3,
+      "type": "pir",
       "location": "cucina",
-      "gpio": 11
+      "zone":"zona 1",
+      "gpio": 7
+      
     }
+    
   ]
 }

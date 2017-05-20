@@ -25,12 +25,16 @@ class Sensor extends EventEmitter {
 	//inizializza il sensore
 	initSensor() {
 		//setup del sensore in lettura
-		gpio.setup(this.gpio, gpio.DIR_IN, gpio.EDGE_BOTH, this.readInput);
+		
+		gpio.setup(this.gpio, gpio.DIR_IN, gpio.EDGE_BOTH, readInput);
 		console.log("Setup del sensore su gpio " + this.gpio)
 		//attivo l'event listener sul sensore che, dopo aver controllato
 		//che il valore sia diverso da quello attuale, rilancia l'evento al controller
 		//chiamando una delle due funzioni
 		var self = this
+		//lettura del valore
+		//this.lastValue=gpio.read(this.gpio,error)
+		//console.log("Valore attuale gpio "+this.gpio+" "+lastValue)
 		gpio.on('change', function (channel, value) {
 			//attenzione, la libreria gpio agisce globalmete, devo verificare
 			//che il canale sia lo stesso di questo sensore
@@ -53,12 +57,15 @@ class Sensor extends EventEmitter {
 			gpio.destroy()
 		});
 
+	
+
+
+
 	}
 
-	readInput() {
 
 
-	}
+
 
 	sensorRiseUp() {
 		// i parametri dopo il nome dell'evento sono quelli
@@ -73,5 +80,14 @@ class Sensor extends EventEmitter {
 	// do app specific cleaning before exiting
 
 }
-
+function error(err) {
+	if (err != undefined) {
+		console.log("Errore: " + err)
+	}
+}
+function readInput() {
+    gpio.read(12, function(err, value) {
+        console.log('The value is ' + value);
+    });
+}
 module.exports = Sensor
