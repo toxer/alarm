@@ -14,12 +14,19 @@ const Server = require('./controller/WebSocketServer')
 //che a ogni evento sensore corrisponda un'azione
 
 function onRiseUp(sensorInfo) {
-    console.log("RiseUp")
-    console.log(sensorInfo);
+    console.log("Rising up")
+    //assemblo il messaggio da invaire al server
+    var message = new Object();
+    message.action = "sensorStatusChange"
+    message.payload=sensorInfo
+    server.sendData(message)
 }
 function onFallingDown(sensorInfo) {
     console.log("Falling down")
-    console.log(sensorInfo)
+    var message = new Object();
+    message.action = "sensorStatusChange"
+    message.payload=sensorInfo
+    server.sendData(message)
 
 }
 
@@ -36,7 +43,7 @@ var raspController = new raspberryController.Controller([onRiseUp], [onFallingDo
 //non sono come le classi java e this è contestualizzato
 //durante la chiamata
 
-var serverFunctions = { "thisObj": raspController, "functions": [{ "message": "sensorsStatus", "function": raspController.getSensorsStatus }] }
+var serverFunctions = { "thisObj": raspController, "functions": [{ "action": "sensorsStatus", "function": raspController.getSensorsStatus }] }
 
 
 

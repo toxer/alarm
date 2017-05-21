@@ -57,6 +57,8 @@ class Sensor extends EventEmitter {
         if (debug) {
             console.log("Emesso evento RiseUp da sensore " + this.gpio)
         }
+        //aggiorno lo stato del sensore
+        this.sensorInfo.status=rpio.read(this.gpio)
         this.emit("RiseUp", this.sensorInfo, this.raspberryController)
      
 
@@ -65,6 +67,7 @@ class Sensor extends EventEmitter {
         if (debug) {
             console.log("Emesso evento FallingDown da sensore " + this.gpio)
         }
+        this.sensorInfo.status=rpio.read(this.gpio)
         this.emit("FallingDown", this.sensorInfo, this.raspberryController)
     }
 

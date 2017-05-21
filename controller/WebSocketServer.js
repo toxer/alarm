@@ -9,10 +9,14 @@ const debug = require('../config/configuration.json').debug.debugServer
 class WebSocketServer extends EventEmitter {
     constructor(porta, functions) {
         super();
-        const wss = new WebSocket.Server({ port: porta });
+        this.wss = new WebSocket.Server({ port: porta });
 
         var self = this;
-        wss.on('connection', function connection(ws) {
+
+        this.wss.on('connection', function connection(ws, req) {
+            if (debug) {
+                console.log("Ricevuta connessione dal server " +req.connection.remoteAddress)
+            }
             ws.on('message', function incoming(message) {
                 if (debug) {
                     console.log("Ricevuto messaggio : " + message)
@@ -22,22 +26,46 @@ class WebSocketServer extends EventEmitter {
                 //non sono come le classi java e this è contestualizzato
                 //durante la chiamata
                 var thisObj = functions.thisObj;
-                //eseguo la funzione
-                for (var index in functions.functions) {
+                //estrapolo la funzione
+                try {
+                    var action = JSON.parse(message).action;
+                    if (action == undefined) {
+                        throw "Action not valid"
+                    }
+                    //eseguo la funzione
+                    for (var index in functions.functions) {
 
-                    if (functions.functions[index].message === message) {
-                        //eseguo la funzione e ritorno il risultato
-                        var response = functions.functions[index].function.apply(thisObj)
-                        if (debug) {
-                            var resToSend = JSON.stringify(response);
-                            console.log("Risposta: " + resToSend)
+
+                        if (functions.functions[index].action === action) {
+                            //eseguo la funzione e ritorno il risultato
+                            var response = functions.functions[index].function.apply(thisObj)
+                            if (debug) {
+                                var resToSend = JSON.stringify(response);
+                                console.log("Risposta: " + resToSend)
+                            }
+                            ws.send(resToSend)
+                            return;
                         }
-                        ws.send(resToSend)
-                        return;
+                        throw "Action " + action + " not mapped"
                     }
                 }
+                catch (err) {
+                    console.error(err)
+                    var error = new Object();
+                    error.action = "error";
+                    error.payload = err
+                    ws.send(JSON.stringify(error));
+                }
+
             });
-            ws.send('Message not mapped');
+
+        });
+    }
+    sendData(messageObject) {
+        this.wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(messageObject));
+            }
         });
     }
 
