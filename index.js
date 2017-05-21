@@ -3,6 +3,7 @@
 //consente di registrarsi per avere lo stato dei sensori
 
 const raspberryController = require('./controller/RaspyController')
+const configuration = require('./config/configuration.json')
 const EventEmitter = require('events');
 
 
@@ -13,20 +14,43 @@ const EventEmitter = require('events');
 //del controller, o registrare gli eventi RaspberrySensorUp e RaspberrySensorDown sul controller
 //il quale estende EventEmitter
 
-function onRiseUp(sensorInfo){
+function onRiseUp(sensorInfo) {
     console.log("RiseUp")
     console.log(sensorInfo);
 }
-function onFallingDown(sensorInfo){
+function onFallingDown(sensorInfo) {
     console.log("Falling down")
     console.log(sensorInfo)
 
 }
 
-function createJsonPackage(sensorInfo){
+function createJsonPackage(sensorInfo) {
 
 }
 
-new raspberryController.Controller([onRiseUp],[onFallingDown])
+var raspController = new raspberryController.Controller([onRiseUp], [onFallingDown])
+
+//raspController.getSensorsStatus();
 
 
+//attivazione gestione eventi da tastiera
+
+
+
+if (configuration.keyboard.events) {
+
+    const readline = require('readline');
+    readline.emitKeypressEvents(process.stdin);
+    process.stdin.setRawMode(true);
+    console.log("Attivati eventi da tastiera")
+    console.log("s-> Stato dei sensori")
+    process.stdin.on('keypress', (str, key) => {
+        if (key.ctrl && key.name === 'c') {
+            process.exit();
+        } else {
+            if (str === 's') {
+                raspController.getSensorsStatus();
+            }
+        }
+    })
+};

@@ -3,5 +3,8 @@
         "debug": true,
         "debugControllerRaspberry": false,
         "debugSensore": false
+    },
+    "keyboard":{
+        "events":true
     }
 }

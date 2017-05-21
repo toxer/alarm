@@ -33,9 +33,9 @@ class Sensor extends EventEmitter {
         this.lastValue = rpio.read(this.gpio)
 
         //attivo la funzione di change
-        rpio.poll(this.gpio, pollcb);
+        rpio.poll(this.gpio, change);
         var self = this;
-        function pollcb(pin) {
+        function change(pin) {
             //qui la funzione di polling agisce direttamente
             //dando il pin e non serve ricontrollare come per la libreria gpio
             var value = rpio.read(pin);
@@ -68,6 +68,15 @@ class Sensor extends EventEmitter {
         this.emit("FallingDown", this.sensorInfo, this.raspberryController)
     }
 
+    readSensorStatus(){
+        var status =  rpio.read(this.gpio)
+        this.sensorInfo.status=status
+        return this.sensorInfo;
+
+    }    
+
 }
+
+
 
 module.exports = Sensor

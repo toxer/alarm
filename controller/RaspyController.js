@@ -40,7 +40,7 @@ class Controller extends EventEmitter {
       var sensor = new Sensor(this.sensorsConfig[index], listeners, this)
       this.sensors.push(sensor)
     }
-    
+
 
   }
 
@@ -65,6 +65,13 @@ class Controller extends EventEmitter {
       console.log("Il controller del raspberry ha ricevuto evento da sensore su gpio" + sensorInfo.gpio + " posizionato in " + sensorInfo.location + " stato down")
     }
     raspberryController.emit("RaspberrySensorDown", sensorInfo)
+  }
+
+
+  getSensorsStatus() {
+    for (var index in this.sensors) {
+      console.log(this.sensors[index].readSensorStatus());
+    }
   }
 
 
