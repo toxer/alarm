@@ -5,14 +5,13 @@
 const raspberryController = require('./controller/RaspyController')
 const configuration = require('./config/configuration.json')
 const EventEmitter = require('events');
+const Server = require('./controller/WebSocketServer')
+
+
 
 
 //registro le funzioni di callback del raspberry in modo
 //che a ogni evento sensore corrisponda un'azione
-
-//ci sono due modi per farlo, o registrare due funzioni sul costruttore 
-//del controller, o registrare gli eventi RaspberrySensorUp e RaspberrySensorDown sul controller
-//il quale estende EventEmitter
 
 function onRiseUp(sensorInfo) {
     console.log("RiseUp")
@@ -24,11 +23,26 @@ function onFallingDown(sensorInfo) {
 
 }
 
-function createJsonPackage(sensorInfo) {
-
-}
 
 var raspController = new raspberryController.Controller([onRiseUp], [onFallingDown])
+
+//funzioni che vengono attivate dai messaggi remoti al server
+//attivo anche un server che si utilizza per chiedere 
+//da remoto le informazioni sullo stato dei sensori e del sistema
+//il server accetta una mappa messaggio, funzione da eseguire che restitusce la risposta
+// va anche specificato l'oggetto su cui applicare la funzione, anche se si tratta di
+//una classe.   
+//questo è obbligatorio perchè le classi javascript
+//non sono come le classi java e this è contestualizzato
+//durante la chiamata
+
+var serverFunctions = { "thisObj": raspController, "functions": [{ "message": "sensorsStatus", "function": raspController.getSensorsStatus }] }
+
+
+
+
+
+var server = new Server.WebSocketServer(8080, serverFunctions);
 
 //raspController.getSensorsStatus();
 
@@ -49,7 +63,7 @@ if (configuration.keyboard.events) {
             process.exit();
         } else {
             if (str === 's') {
-                raspController.getSensorsStatus();
+                console.log(raspController.getSensorsStatus());
             }
         }
     })

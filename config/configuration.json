@@ -2,7 +2,8 @@
     "debug": {
         "debug": true,
         "debugControllerRaspberry": false,
-        "debugSensore": false
+        "debugSensore": false,
+        "debugServer":true
     },
     "keyboard":{
         "events":true

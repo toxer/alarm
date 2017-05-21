@@ -69,9 +69,11 @@ class Controller extends EventEmitter {
 
 
   getSensorsStatus() {
+    var sensorStatus = []
     for (var index in this.sensors) {
-      console.log(this.sensors[index].readSensorStatus());
+      sensorStatus.push(this.sensors[index].readSensorStatus());
     }
+    return sensorStatus;
   }
 
 
